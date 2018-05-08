@@ -123,7 +123,7 @@ function createXHR(){
 					new ActiveXObject(versions[i]);
 					arguments.callee.activeXString = versions[i];
 					break;
-				}catch(ex){
+				}catch(ex){    
 					//跳过
 				}
 			}
