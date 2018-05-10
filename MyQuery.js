@@ -135,24 +135,34 @@ function createXHR(){
 }
 
 /**
- *@param url(请求的地址) data(请求的数据) method(请求的方式) bool(是否异步)true/false success是一个函数
+ *@param url(请求的地址) data(请求的数据) method(请求的方式) bool(是否异步)true/false success请求成功以后调用的函数
  * 封装Ajax方法的，get 和post请求方式
- * 
+ * 改进 传入的参数是一个对象
+ * option
+ * {
+ * 	  method:请求的方式，
+ * 	  url:请求的url，
+ *    data:发送的数据，
+ *    bool:true/false,
+ *    success:要调用的函数
+ * }
  */
-function $ajax(url,data,method,bool,success){
-	let xhr=createXHR();//使用到上面封装使用XMLHttpRequest的函数
-	if(method === "get"){   //如果请求方式是get判断是否需要传递数据
-		if(data){           
-			url +="？";
-			url +=data;   //如果有数据则拼接url
-		}else{}
-		xhr.open(method,url,bool);  
-		xhr.send();
+function $ajax(option){
+	var xhr=createXHR();//使用到上面封装使用XMLHttpRequest的函数
+	if(option.method === "get"){   //如果请求方式是get判断是否需要传递数据
+		if(option.data){           
+			option.url +="?";
+			option.url +=data; 
+			//如果有数据则拼接url
+			xhr.open(option.method,option.url,option.bool);
+			xhr.send();
+		}
+		
 	}else{
-		xhr.open(method,url,bool);
+		xhr.open(option.method,option.url,option.bool);
 		xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded"); //post请求方式 设置请求头
-		if(data){              //判断是否有数据，如果有，则发送数据
-			xhr.send(data);
+		if(option.data){              //判断是否有数据，如果有，则发送数据
+			xhr.send(option.data);
 		}else{         //没有则发送请求
 			xhr.send();
 		}
@@ -161,7 +171,7 @@ function $ajax(url,data,method,bool,success){
 		if(this.readyState === 4 && this.status === 200){
 			//外面传入一个function作为参数success
 			//success把里面的值传出去
-			success(this.responseText);
+			option.success(this.responseText);
 		}
 	}
 }
